@@ -1,16 +1,27 @@
-import { forwardRef } from "react";
+import { forwardRef, useImperativeHandle, useRef } from "react";
+import type { ResultModalRef } from "../types/timer";
 
 interface Props {
   result: string;
   targetTime: number;
 }
 
-const ResultModal = forwardRef<HTMLDialogElement, Props>(function ResultModal(
+const ResultModal = forwardRef<ResultModalRef, Props>(function ResultModal(
   { result, targetTime },
   ref
 ) {
+  const dialog = useRef<HTMLDialogElement | null>(null);
+
+  useImperativeHandle(ref, () => {
+    return {
+      open() {
+        dialog.current?.showModal();
+      },
+    };
+  });
+
   return (
-    <dialog className="result-modal" ref={ref}>
+    <dialog className="result-modal" ref={dialog}>
       <h2>You {result}</h2>
       <p>
         The target time was <strong>{targetTime} seconds.</strong>
