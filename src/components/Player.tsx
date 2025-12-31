@@ -15,7 +15,7 @@ function Player() {
 
   return (
     <section id="player">
-      <h2>Welcome {enteredPlayerName ?? "unknown entity"}</h2>
+      <h2>Welcome {enteredPlayerName ?? "Guest"}</h2>
       <p>
         <input ref={playerName} type="text" />
         <button onClick={handleClick}>Set Name</button>
