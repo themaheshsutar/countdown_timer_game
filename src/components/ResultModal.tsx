@@ -2,15 +2,20 @@ import { forwardRef, useImperativeHandle, useRef } from "react";
 import type { ResultModalRef } from "../types/timer";
 
 interface Props {
-  result: string;
   targetTime: number;
+  remainingTime: number;
+  onReset: () => void;
 }
 
 const ResultModal = forwardRef<ResultModalRef, Props>(function ResultModal(
-  { result, targetTime },
+  { targetTime, remainingTime, onReset },
   ref
 ) {
-  const dialog = useRef<HTMLDialogElement | null>(null);
+  const dialog = useRef<HTMLDialogElement>(null);
+
+  const userLost = remainingTime <= 0;
+  const formattedRemainingTime = (remainingTime / 1000).toFixed(2);
+  const score = Math.round((1 - remainingTime / (targetTime * 1000)) * 100);
 
   useImperativeHandle(ref, () => {
     return {
@@ -21,15 +26,16 @@ const ResultModal = forwardRef<ResultModalRef, Props>(function ResultModal(
   });
 
   return (
-    <dialog className="result-modal" ref={dialog}>
-      <h2>You {result}</h2>
+    <dialog className="result-modal" ref={dialog} onClose={onReset}>
+      {userLost ? <h2>You lost</h2> : <h2>Your Score: {score}</h2>}
       <p>
         The target time was <strong>{targetTime} seconds.</strong>
       </p>
       <p>
-        You stopped the timer with <strong>X seconds left.</strong>
+        You stopped the timer with{" "}
+        <strong>{formattedRemainingTime} seconds left.</strong>
       </p>
-      <form method="dialog">
+      <form method="dialog" onSubmit={onReset}>
         <button>Close</button>
       </form>
     </dialog>
