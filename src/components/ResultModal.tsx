@@ -40,7 +40,7 @@ const ResultModal = forwardRef<ResultModalRef, Props>(function ResultModal(
         <button>Close</button>
       </form>
     </dialog>,
-    document.querySelector("#dialog")!
+    document.getElementById("modal")!
   );
 });
 
